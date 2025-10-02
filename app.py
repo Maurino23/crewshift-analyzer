@@ -323,28 +323,37 @@ if planned_file is not None and actual_file is not None:
                     'Persentase': kategori_pct.values
                 })
                 
-                # Chart dengan Plotly
-                fig = go.Figure()
-                
+                # Pie Chart dengan Plotly
                 colors = {'maintain': '#2ecc71', 'change': '#e74c3c'}
+                color_list = [colors.get(cat, '#3498db') for cat in chart_data['Kategori']]
                 
-                for idx, row in chart_data.iterrows():
-                    fig.add_trace(go.Bar(
-                        x=[row['Kategori']],
-                        y=[row['Jumlah']],
-                        name=row['Kategori'],
-                        text=[f"{row['Persentase']:.1f}%<br>({int(row['Jumlah'])} items)"],
-                        textposition='outside',
-                        marker_color=colors.get(row['Kategori'], '#3498db'),
-                        showlegend=False
-                    ))
+                fig = go.Figure(data=[go.Pie(
+                    labels=[cat.capitalize() for cat in chart_data['Kategori']],
+                    values=chart_data['Jumlah'],
+                    marker=dict(colors=color_list),
+                    textinfo='label+percent+value',
+                    texttemplate='<b>%{label}</b><br>%{percent}<br>(%{value} items)',
+                    hovertemplate='<b>%{label}</b><br>' +
+                                'Jumlah: %{value}<br>' +
+                                'Persentase: %{percent}<extra></extra>',
+                    hole=0.3  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
+                )])
                 
                 fig.update_layout(
-                    title="Total Maintain vs Change",
-                    xaxis_title="Kategori",
-                    yaxis_title="Jumlah",
+                    title={
+                        'text': "Total Maintain vs Change",
+                        'x': 0.5,
+                        'xanchor': 'center'
+                    },
                     height=500,
-                    showlegend=False
+                    showlegend=True,
+                    legend=dict(
+                        orientation="v",
+                        yanchor="middle",
+                        y=0.5,
+                        xanchor="left",
+                        x=1.05
+                    )
                 )
                 
                 st.plotly_chart(fig, use_container_width=True)
@@ -352,7 +361,7 @@ if planned_file is not None and actual_file is not None:
                 # Tabel summary
                 st.markdown("### 📊 Summary Statistics")
                 summary_df = pd.DataFrame({
-                    'Kategori': chart_data['Kategori'],
+                    'Kategori': [cat.capitalize() for cat in chart_data['Kategori']],
                     'Jumlah': chart_data['Jumlah'],
                     'Persentase': chart_data['Persentase'].apply(lambda x: f"{x:.1f}%")
                 })
@@ -629,4 +638,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
