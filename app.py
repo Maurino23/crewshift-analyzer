@@ -624,8 +624,9 @@ st.markdown("---")
 st.markdown(
     """
     <div style='text-align: center'>
-        <p>✈️ CrewShift Analyzer v1.0 | Made with ❤️ by Rino</p>
+        <p>✈️ CrewShift Analyzer v1.0</p>
     </div>
     """,
     unsafe_allow_html=True
 )
+
