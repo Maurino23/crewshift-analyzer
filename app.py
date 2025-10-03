@@ -331,12 +331,12 @@ if planned_file is not None and actual_file is not None:
                     labels=[cat.capitalize() for cat in chart_data['Kategori']],
                     values=chart_data['Jumlah'],
                     marker=dict(colors=color_list),
-                    textinfo='label+percent+value',
-                    texttemplate='<b>%{label}</b><br>%{percent}<br>(%{value} items)',
+                    textinfo='label+percent',
+                    texttemplate='<b>%{label}</b><br>%{percent}',
                     hovertemplate='<b>%{label}</b><br>' +
                                 'Jumlah: %{value}<br>' +
                                 'Persentase: %{percent}<extra></extra>',
-                    hole=0.3  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
+                    hole=0  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
                 )])
                 
                 fig.update_layout(
