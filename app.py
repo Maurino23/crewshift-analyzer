@@ -448,10 +448,26 @@ if planned_file is not None and actual_file is not None:
                         y=0.5,
                         xanchor="left",
                         x=1.05
-                    )
+                    ),
+                    # Transparent background untuk download
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)'
                 )
                 
-                st.plotly_chart(fig, use_container_width=True)
+                # Config untuk download dengan background transparan
+                config = {
+                    'toImageButtonOptions': {
+                        'format': 'png',
+                        'filename': 'maintain_vs_change',
+                        'height': 600,
+                        'width': 800,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False
+                }
+                
+                st.plotly_chart(fig, use_container_width=True, config=config)
                 
                 # Tabel summary
                 st.markdown("### 📊 Summary Statistics")
@@ -515,10 +531,26 @@ if planned_file is not None and actual_file is not None:
                     yaxis_title="Jumlah",
                     barmode='stack',
                     height=500,
-                    hovermode='x unified'
+                    hovermode='x unified',
+                    # Transparent background untuk download
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)'
                 )
                 
-                st.plotly_chart(fig, use_container_width=True)
+                # Config untuk download dengan background transparan
+                config = {
+                    'toImageButtonOptions': {
+                        'format': 'png',
+                        'filename': 'daily_stacked_chart',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False
+                }
+                
+                st.plotly_chart(fig, use_container_width=True, config=config)
             else:
                 st.warning("Tidak ada data untuk ditampilkan")
         
@@ -573,10 +605,26 @@ if planned_file is not None and actual_file is not None:
                     yaxis_title="Jumlah",
                     barmode='group',
                     height=500,
-                    hovermode='x unified'
+                    hovermode='x unified',
+                    # Transparent background untuk download
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)'
                 )
                 
-                st.plotly_chart(fig, use_container_width=True)
+                # Config untuk download dengan background transparan
+                config = {
+                    'toImageButtonOptions': {
+                        'format': 'png',
+                        'filename': 'daily_grouped_chart',
+                        'height': 600,
+                        'width': 1200,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False
+                }
+                
+                st.plotly_chart(fig, use_container_width=True, config=config)
             else:
                 st.warning("Tidak ada data untuk ditampilkan")
         
@@ -619,10 +667,26 @@ if planned_file is not None and actual_file is not None:
                     xaxis_title="Rank",
                     yaxis_title="Jumlah",
                     barmode='group',
-                    height=500
+                    height=500,
+                    # Transparent background untuk download
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)'
                 )
                 
-                st.plotly_chart(fig, use_container_width=True)
+                # Config untuk download dengan background transparan
+                config = {
+                    'toImageButtonOptions': {
+                        'format': 'png',
+                        'filename': 'rank_comparison_chart',
+                        'height': 600,
+                        'width': 1000,
+                        'scale': 2
+                    },
+                    'displayModeBar': True,
+                    'displaylogo': False
+                }
+                
+                st.plotly_chart(fig, use_container_width=True, config=config)
                 
                 # Tabel summary per rank
                 st.markdown("### 📊 Ringkasan per Rank")
@@ -733,4 +797,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
