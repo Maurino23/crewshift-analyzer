@@ -63,6 +63,95 @@ def detect_rank(rank_value):
         return 'Cabin'
 
 # ============================================
+# FUNGSI UNTUK NORMALISASI FLIGHT NUMBER
+# ============================================
+def normalize_flight_number(flight_code):
+    """
+    Normalisasi flight number dengan menghapus suffix huruf
+    Contoh: JT111A, JT111Z, JT111D → JT111
+    """
+    import re
+    
+    flight_code = str(flight_code).strip().upper()
+    
+    # Pattern: 2 huruf diikuti angka, kemudian mungkin ada huruf di akhir
+    # Contoh: JT111A → ambil JT111
+    pattern = r'([A-Z]{2})(\d+)[A-Z]?'
+    match = re.match(pattern, flight_code)
+    
+    if match:
+        # Return airline code + number (tanpa suffix huruf)
+        return match.group(1) + match.group(2)
+    
+    # Jika tidak match pattern, return as is
+    return flight_code
+
+def is_maintain(planned, actual):
+    """
+    Fungsi untuk menentukan apakah schedule maintain atau change
+    
+    Aturan:
+    1. Suffix huruf diabaikan (JT111A = JT111)
+    2. SA1/SA2 (standby) → flight number = maintain
+    3. SA1/SA2 → kosong/OFF = maintain
+    4. Multiple flight harus sama urutan dan jumlahnya
+    5. Kosong ("-") vs ada isi = change
+    """
+    
+    # Normalisasi: uppercase, strip spaces
+    planned = str(planned).strip().upper()
+    actual = str(actual).strip().upper()
+    
+    # Handle nilai kosong/NaN
+    if planned in ['NAN', '-', '']:
+        planned = '-'
+    if actual in ['NAN', '-', '']:
+        actual = '-'
+    
+    # Jika keduanya kosong = maintain
+    if planned == '-' and actual == '-':
+        return True
+    
+    # Jika salah satu kosong = change
+    if planned == '-' or actual == '-':
+        return False
+    
+    # RULE: SA1/SA2 (standby) → kosong/OFF = maintain
+    if planned in ['SA1', 'SA2'] and actual in ['OFF', '-']:
+        return True
+    
+    # RULE: SA1/SA2 (standby) → flight number = maintain
+    if planned in ['SA1', 'SA2']:
+        # Cek apakah actual adalah flight number (format: 2 huruf + angka)
+        import re
+        if re.match(r'[A-Z]{2}\d+', actual.split('/')[0]):
+            return True
+    
+    # Jika keduanya sama persis = maintain
+    if planned == actual:
+        return True
+    
+    # Split by slash untuk multiple flights
+    planned_flights = planned.split('/')
+    actual_flights = actual.split('/')
+    
+    # Jika jumlah flight berbeda = change
+    if len(planned_flights) != len(actual_flights):
+        return False
+    
+    # Compare setiap flight dengan normalisasi (hapus suffix huruf)
+    for p_flight, a_flight in zip(planned_flights, actual_flights):
+        p_normalized = normalize_flight_number(p_flight.strip())
+        a_normalized = normalize_flight_number(a_flight.strip())
+        
+        # Jika ada yang berbeda = change
+        if p_normalized != a_normalized:
+            return False
+    
+    # Semua sama = maintain
+    return True
+
+# ============================================
 # FUNGSI ANALISIS
 # ============================================
 @st.cache_data
@@ -112,8 +201,8 @@ def analyze_schedule(planned_df, actual_df, id_columns):
             if actual_val == 'nan':
                 actual_val = '-'
             
-            # Tentukan kategori
-            if planned_val == actual_val:
+            # Tentukan kategori menggunakan fungsi is_maintain
+            if is_maintain(planned_val, actual_val):
                 kategori = 'maintain'
             else:
                 kategori = 'change'
@@ -150,6 +239,12 @@ def analyze_schedule(planned_df, actual_df, id_columns):
                     actual_val = '-'
                 
                 # Crew baru: planned = '-', actual = nilai dari data
+                # Gunakan fungsi is_maintain untuk konsistensi
+                if is_maintain('-', actual_val):
+                    kategori = 'maintain'
+                else:
+                    kategori = 'change'
+                
                 all_changes.append({
                     'Crew ID': crew_id,
                     'Crew Name': crew_name,
@@ -157,7 +252,7 @@ def analyze_schedule(planned_df, actual_df, id_columns):
                     'Tanggal': date_col,
                     'Planned': '-',
                     'Actual': actual_val,
-                    'Kategori': 'change' if actual_val != '-' else 'maintain'
+                    'Kategori': kategori
                 })
     
     changes_df = pd.DataFrame(all_changes)
@@ -336,7 +431,7 @@ if planned_file is not None and actual_file is not None:
                     hovertemplate='<b>%{label}</b><br>' +
                                 'Jumlah: %{value}<br>' +
                                 'Persentase: %{percent}<extra></extra>',
-                    hole=0  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
+                    hole=0.3  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
                 )])
                 
                 fig.update_layout(
