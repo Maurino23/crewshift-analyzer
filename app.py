@@ -431,7 +431,7 @@ if planned_file is not None and actual_file is not None:
                     hovertemplate='<b>%{label}</b><br>' +
                                 'Jumlah: %{value}<br>' +
                                 'Persentase: %{percent}<extra></extra>',
-                    hole=0  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
+                    hole=0.3  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
                 )])
                 
                 fig.update_layout(
@@ -439,7 +439,7 @@ if planned_file is not None and actual_file is not None:
                         'text': "Total Maintain vs Change",
                         'x': 0.5,
                         'xanchor': 'center',
-                        'font': {'size': 24, 'color': 'white', 'family': 'Arial Black'}
+                        'font': {'size': 24, 'family': 'Arial Black'}
                     },
                     height=500,
                     showlegend=True,
@@ -454,13 +454,13 @@ if planned_file is not None and actual_file is not None:
                     # Transparent background untuk download
                     paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
-                    # Font global
+                    # Font global (auto color)
                     font=dict(size=16, family='Arial')
                 )
                 
-                # Update text di dalam pie chart
+                # Update text di dalam pie chart (putih tetap untuk kontras dengan bar warna)
                 fig.update_traces(
-                    textfont=dict(size=16, family='Arial Bold')
+                    textfont=dict(size=16, color='white', family='Arial Bold')
                 )
                 
                 # Config untuk download dengan background transparan
@@ -526,7 +526,7 @@ if planned_file is not None and actual_file is not None:
                         marker_color=colors.get(kategori, '#3498db'),
                         text=text_labels,
                         textposition='inside',
-                        textfont=dict(size=14, family='Arial Bold'),
+                        textfont=dict(size=14, color='white', family='Arial Bold'),
                         customdata=customdata,
                         hovertemplate='<b>Tanggal %{x}</b><br>' +
                                     'Kategori: ' + kategori + '<br>' +
@@ -536,19 +536,19 @@ if planned_file is not None and actual_file is not None:
                 
                 fig.update_layout(
                     title="Maintain dan Change per Tanggal (Stacked)",
-                    title_font=dict(size=24, family='Arial Black'),
+                    title_font=dict(size=24, color='white', family='Arial Black'),
                     xaxis_title="Tanggal",
                     yaxis_title="Jumlah",
                     xaxis=dict(
-                        title_font=dict(size=18),
-                        tickfont=dict(size=14)
+                        title_font=dict(size=18, color='white'),
+                        tickfont=dict(size=14, color='white')
                     ),
                     yaxis=dict(
-                        title_font=dict(size=18),
-                        tickfont=dict(size=14)
+                        title_font=dict(size=18, color='white'),
+                        tickfont=dict(size=14, color='white')
                     ),
                     legend=dict(
-                        font=dict(size=14)
+                        font=dict(size=14, color='white')
                     ),
                     barmode='stack',
                     height=500,
@@ -556,7 +556,7 @@ if planned_file is not None and actual_file is not None:
                     # Transparent background untuk download
                     paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
-                    font=dict(size=14, family='Arial')
+                    font=dict(size=14, color='white', family='Arial')
                 )
                 
                 # Config untuk download dengan background transparan
@@ -613,7 +613,7 @@ if planned_file is not None and actual_file is not None:
                         marker_color=colors.get(kategori, '#3498db'),
                         text=text_labels,
                         textposition='outside',
-                        textfont=dict(size=14, family='Arial Bold'),
+                        textfont=dict(size=14, color='white', family='Arial Bold'),
                         customdata=customdata,
                         hovertemplate='<b>Tanggal %{x}</b><br>' +
                                     'Kategori: ' + kategori + '<br>' +
@@ -623,19 +623,19 @@ if planned_file is not None and actual_file is not None:
                 
                 fig.update_layout(
                     title="Maintain dan Change per Tanggal (Grouped)",
-                    title_font=dict(size=24, family='Arial Black'),
+                    title_font=dict(size=24, color='white', family='Arial Black'),
                     xaxis_title="Tanggal",
                     yaxis_title="Jumlah",
                     xaxis=dict(
-                        title_font=dict(size=18),
-                        tickfont=dict(size=14)
+                        title_font=dict(size=18, color='white'),
+                        tickfont=dict(size=14, color='white')
                     ),
                     yaxis=dict(
-                        title_font=dict(size=18),
-                        tickfont=dict(size=14)
+                        title_font=dict(size=18, color='white'),
+                        tickfont=dict(size=14, color='white')
                     ),
                     legend=dict(
-                        font=dict(size=14)
+                        font=dict(size=14, color='white')
                     ),
                     barmode='group',
                     height=500,
@@ -643,7 +643,7 @@ if planned_file is not None and actual_file is not None:
                     # Transparent background untuk download
                     paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
-                    font=dict(size=14, family='Arial')
+                    font=dict(size=14, color='white', family='Arial')
                 )
                 
                 # Config untuk download dengan background transparan
@@ -690,7 +690,7 @@ if planned_file is not None and actual_file is not None:
                         text=[f"{customdata[i][1]:.1f}%<br>({customdata[i][0]} items)" 
                               for i in range(len(customdata))],
                         textposition='outside',
-                        textfont=dict(size=16, family='Arial Bold'),
+                        textfont=dict(size=16, color='white', family='Arial Bold'),
                         customdata=customdata,
                         hovertemplate='<b>%{x}</b><br>' +
                                     'Kategori: ' + kategori + '<br>' +
@@ -700,26 +700,26 @@ if planned_file is not None and actual_file is not None:
                 
                 fig.update_layout(
                     title="Maintain dan Change per Rank",
-                    title_font=dict(size=24, family='Arial Black'),
+                    title_font=dict(size=24, color='white', family='Arial Black'),
                     xaxis_title="Rank",
                     yaxis_title="Jumlah",
                     xaxis=dict(
-                        title_font=dict(size=18),
-                        tickfont=dict(size=14)
+                        title_font=dict(size=18, color='white'),
+                        tickfont=dict(size=14, color='white')
                     ),
                     yaxis=dict(
-                        title_font=dict(size=18),
-                        tickfont=dict(size=14)
+                        title_font=dict(size=18, color='white'),
+                        tickfont=dict(size=14, color='white')
                     ),
                     legend=dict(
-                        font=dict(size=14)
+                        font=dict(size=14, color='white')
                     ),
                     barmode='group',
                     height=500,
                     # Transparent background untuk download
                     paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
-                    font=dict(size=14, family='Arial')
+                    font=dict(size=14, color='white', family='Arial')
                 )
                 
                 # Config untuk download dengan background transparan
@@ -846,5 +846,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-
