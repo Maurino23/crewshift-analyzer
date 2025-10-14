@@ -431,7 +431,7 @@ if planned_file is not None and actual_file is not None:
                     hovertemplate='<b>%{label}</b><br>' +
                                 'Jumlah: %{value}<br>' +
                                 'Persentase: %{percent}<extra></extra>',
-                    hole=0.3  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
+                    hole=0  # Membuat donut chart (opsional, hapus jika ingin pie penuh)
                 )])
                 
                 fig.update_layout(
@@ -846,3 +846,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
